@@ -1,0 +1,25 @@
+{
+  "name": "hcg/wechat",
+  "description": "微信开发工具类",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "黄翠刚",
+      "email": "532508307@qq.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.2",
+    "predis/predis": "2.0.x-dev",
+    "php-curl-class/php-curl-class": "dev-master",
+    "ext-redis": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Hcg\\Wechat\\": "src/"
+    }
+  }
+}

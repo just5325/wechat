@@ -1,0 +1,4 @@
+# 忽略idea编辑器文件
+.idea
+# 忽略vendor目录
+vendor
