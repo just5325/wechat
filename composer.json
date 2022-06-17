@@ -12,7 +12,9 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=7.2",
-    "php-curl-class/php-curl-class": "dev-master",
+    "php-curl-class/php-curl-class": "*"
+  },
+  "require-dev": {
     "ext-redis": "*",
     "ext-json": "*"
   },
