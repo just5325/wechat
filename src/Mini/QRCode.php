@@ -11,46 +11,10 @@ use Hcg\Wechat\AccessToken;
  * 获取小程序码
  * @author hcg<532508307@qq.com>
  * */
-class QRCode
+class QRCode extends Base
 {
     # 获取小程序码接口地址
     const API_GET_WXACODE = 'https://api.weixin.qq.com/wxa/getwxacode';
-
-    # 重试次数过多
-    const ERROR_RETRY_LIMIT = -1000;
-
-    # 请求微信接口失败重试次数
-    private $api_post_retry = 3;
-
-    # 微信接口请求计数器（默认为0）
-    private $api_post_counter = 0;
-
-    private $access_token;
-
-    /**
-     * @param AccessToken $access_token
-     * @author hcg<532508307@qq.com>
-     */
-    public function __construct(AccessToken $access_token){
-        $this->access_token = $access_token;
-    }
-
-    /**
-     * 微信接口请求计数器
-     * */
-    private function apiPostCounter()
-    {
-        $this->api_post_counter++;
-    }
-
-    /**
-     * 是否请求次数达到限制
-     * @return bool true:达到限制重试次数
-     * */
-    private function isApiPostCounter(): bool
-    {
-        return $this->api_post_counter > $this->api_post_retry;
-    }
 
     /**
      * 获取小程序码
@@ -79,7 +43,7 @@ class QRCode
             file_put_contents($temp_dir_file,$ret);
         } else {
             // 更新微信access_token，再次调用本方法
-            $access_token->forceUpdate()->getAccessToken();
+            $this->access_token->forceUpdate()->getAccessToken();
             return $this->getWxaCode($params);
         }
 
