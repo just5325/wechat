@@ -15,14 +15,37 @@ class QRCode extends Base
 {
     # 获取小程序码接口地址
     const API_GET_WXACODE = 'https://api.weixin.qq.com/wxa/getwxacode';
+    const API_GET_WXACODEUNLIMIT = 'https://api.weixin.qq.com/wxa/getwxacodeunlimit';
 
     /**
-     * 获取小程序码
+     * 获取小程序码(可接受 path 参数较长，生成个数受限)
      * @param array $params 获取小程序码参数请参考微信官方接口文档（https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.get.html）
      * @return int|string 成功的话返回二维码图片文件路径，失败的话返回错误码
      * @author hcg<532508307@qq.com>
      */
     public function getWxaCode(array $params)
+    {
+        return $this->getQRCode(self::API_GET_WXACODE, $params);
+    }
+
+    /**
+     * 获取小程序码(可接受页面参数较短，生成个数不受限)
+     * @param array $params 获取小程序码参数请参考微信官方接口文档（https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.getUnlimited.html）
+     * @return int|string 成功的话返回二维码图片文件路径，失败的话返回错误码
+     * @author hcg<532508307@qq.com>
+     */
+    public function getWxaCodeUnLimit(array $params)
+    {
+        // 兼容getWxaCode的模式,识别path上的参数
+        if(!isset($params['scene'])) {
+            $parse_url = parse_url($params['path']);
+            $params['path'] = $parse_url['path'] ?? '';
+            $params['scene'] = $parse_url['query'] ?? '';
+        }
+        return $this->getQRCode(self::API_GET_WXACODEUNLIMIT, $params);
+    }
+
+    private function getQRCode($api_url, array $params)
     {
         # 微信接口请求计数器
         $this->apiPostCounter();
@@ -31,7 +54,7 @@ class QRCode extends Base
         }
 
         $access_token = $this->access_token->getAccessToken();
-        $post_url = self::API_GET_WXACODE."?access_token={$access_token}";
+        $post_url = $api_url."?access_token={$access_token}";
         $curl = new Curl();
         $ret = $curl->post($post_url, json_encode($params));
         // 判断是否为json格式
@@ -49,5 +72,6 @@ class QRCode extends Base
 
         return $temp_dir_file;
     }
+
 
 }
